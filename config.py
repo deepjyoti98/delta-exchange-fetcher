@@ -12,9 +12,7 @@ API_VERSION = "v2"
 
 # Data Configuration
 SYMBOLS = [
-    "BTCUSD",    # Bitcoin perpetual
     "ETHUSD",    # Ethereum perpetual
-    "SOLUSD",    # Solana perpetual
     # Add more symbols as needed
 ]
 

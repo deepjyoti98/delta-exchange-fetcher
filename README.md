@@ -8,6 +8,7 @@ A Python application for fetching historical cryptocurrency data from Delta Exch
 - **Multiple Symbols**: Support for Bitcoin, Ethereum, Solana, and other perpetual futures
 - **Smart Rate Limiting**: Handles API rate limits and pagination automatically
 - **Data Export**: Saves data to CSV files with proper formatting
+- **Technical Indicators**: Calculate RSI, SMA-50, EMA Crossover, ATR, MACD, and more
 - **Comprehensive Logging**: Detailed logs for monitoring and debugging
 - **Error Handling**: Robust error handling and retry mechanisms
 
@@ -127,14 +128,96 @@ python examples/timeframe_examples.py
 Deltain-trader/
 ├── config.py              # Configuration settings
 ├── data_fetcher.py        # Core data fetching functionality
+├── technical_indicators.py # Technical analysis indicators calculator
 ├── main.py                # Interactive script entry point
 ├── requirements.txt       # Python dependencies
 ├── README.md              # This documentation
 ├── data/                  # Directory for saved CSV files
+│   ├── RSI/               # RSI indicator data
+│   ├── SMA50/             # SMA-50 indicator data
+│   ├── EMA_CROSSOVER/     # EMA 9-21 crossover data
+│   ├── ATR/               # Average True Range data
+│   ├── MACD/              # MACD indicator data
+│   ├── BBANDS/            # Bollinger Bands data
+│   ├── VWAP/              # Volume Weighted Average Price data
+│   ├── OBV/               # On-Balance Volume data
+│   ├── ADX/               # Average Directional Index data
+│   └── consolidated/      # Combined indicators data
 ├── logs/                  # Directory for log files
 └── examples/              # Example scripts
     └── timeframe_examples.py
 ```
+
+## 📊 Technical Indicators
+
+The `technical_indicators.py` module is a comprehensive technical analysis engine that calculates and organizes multiple technical indicators for cryptocurrency market analysis.
+
+### 📈 Supported Indicators
+
+| Indicator | Description | Parameters |
+|-----------|-------------|------------|
+| **RSI-14** | Relative Strength Index | Period: 14, Overbought: 60, Oversold: 40 |
+| **SMA-50** | Simple Moving Average | Period: 50 days |
+| **EMA 9-21 Crossover** | Exponential Moving Average Crossover | Fast: 9 periods, Slow: 21 periods |
+| **ATR-14** | Average True Range | Period: 14 |
+| **MACD** | Moving Average Convergence Divergence | Fast: 12, Slow: 26, Signal: 9 |
+| **Bollinger Bands** | Volatility Bands | Period: 20, Deviations: 2 |
+| **VWAP** | Volume Weighted Average Price | Calculated per session |
+| **OBV** | On-Balance Volume | Uses price and volume relationship |
+| **ADX** | Average Directional Index | Period: 14, Threshold: 25 |
+
+### 🔍 Features
+
+- **Organized Data Storage**: Each indicator is saved in its dedicated directory
+- **Consolidated Dataset**: Creates a combined file with all indicators
+- **CSV Output**: All data is exported to CSV format for easy integration
+- **Custom Signals**: Generates trading signals based on indicator values
+- **Statistical Analysis**: Provides current market condition insights
+- **Batch Processing**: Process multiple symbols and timeframes at once
+
+### 🛠️ Usage
+
+#### Command Line
+
+Process all data files in the data directory:
+
+```bash
+python technical_indicators.py
+```
+
+#### Programmatic Usage
+
+```python
+from technical_indicators import process_all_csv_files, process_csv_file, create_output_directories
+
+# Process all CSV files in the data directory
+results = process_all_csv_files()
+
+# Process a specific file
+from pathlib import Path
+file_path = Path("data/BTCUSD_1h_20230101_20230131.csv")
+dirs = create_output_directories()
+stats = process_csv_file(file_path, dirs)
+```
+
+### 📁 Data Organization
+
+The technical indicators module organizes data in the following structure:
+
+- **Individual Indicator Files**: Each indicator is saved in its dedicated subfolder
+- **Naming Convention**: `{symbol}_{timeframe}_{start_date}_{end_date}_{indicator}.csv`
+- **Consolidated File**: All indicators combined in one file at `data/consolidated/{symbol}_{timeframe}_{start_date}_{end_date}_ALL_INDICATORS.csv`
+
+### 📊 Signal Generation
+
+The module provides trading signals based on each indicator:
+
+- **RSI Signals**: Overbought (≥60), Oversold (≤40), Neutral (40-60)
+- **SMA Signals**: Price Above/Below SMA, Rising/Falling Trend
+- **EMA Crossover**: Bullish Cross (9 crosses above 21), Bearish Cross (9 crosses below 21)
+- **MACD Signals**: Bullish (MACD > Signal), Bearish (MACD < Signal)
+- **Bollinger Bands**: Above Bands, Below Bands, Inside Bands
+- **ADX Signals**: Strong Trend (>25), Weak Trend (≤25)
 
 ## 📊 Data Output
 
@@ -289,7 +372,7 @@ If you encounter any issues or have questions:
 ## 🎯 Roadmap
 
 - [ ] Real-time data streaming via WebSocket
-- [ ] Technical indicators calculation
+- [x] Technical indicators calculation
 - [ ] Data visualization dashboard
 - [ ] Database storage support
 - [ ] Multiple exchange support
